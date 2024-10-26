@@ -1,8 +1,40 @@
+# Compiled binaries
 jobstr-relay
 test-relay
-./db
+
+# Database folder
+/db/
+
+# Database files (in case any are created outside the db folder)
+*.db
 *.sqlite
+
+# Test and coverage files
 *.test
 *.out
+
+# Environment files
 *.env
 
+# OS-specific files and folders
+.DS_Store
+Thumbs.db
+
+# Dependency and build directories
+/vendor/
+/build/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Others
+*.bak
