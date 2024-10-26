@@ -8,11 +8,15 @@ import (
 	"github.com/nbd-wtf/go-nostr"
 )
 
-func RestrictToSpecifiedKinds(kinds ...uint16) func(context.Context, *nostr.Event) (bool, string) {
-	slices.Sort(kinds)
+var allowedKinds = []uint16{
+	1,
+}
+
+func RestrictToSpecifiedKinds() func(context.Context, *nostr.Event) (bool, string) {
+	slices.Sort(allowedKinds)
 
 	return func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
-		if _, allowed := slices.BinarySearch(kinds, uint16(event.Kind)); allowed {
+		if _, allowed := slices.BinarySearch(allowedKinds, uint16(event.Kind)); allowed {
 			return false, ""
 		}
 
