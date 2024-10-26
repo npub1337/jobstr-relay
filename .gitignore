@@ -1,0 +1,8 @@
+jobstr-relay
+test-relay
+./db
+*.sqlite
+*.test
+*.out
+*.env
+
