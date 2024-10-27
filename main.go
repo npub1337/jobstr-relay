@@ -1,17 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"jobstr-relay/policies"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/fiatjaf/eventstore/sqlite3"
 	"github.com/fiatjaf/khatru"
-	"github.com/nbd-wtf/go-nostr"
 )
 
 func main() {
@@ -37,18 +34,8 @@ func main() {
 	}
 
 	relay.RejectEvent = append(relay.RejectEvent,
-		policies.RestrictToSpecifiedKinds(),
-		policies.PreventLargeTags(),
-		policies.PreventTooManyIndexableTags(),
-		func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
-			lines := strings.Split(strings.TrimSpace(event.Content), "\n")
-			if len(lines) != 2 ||
-				!strings.HasPrefix(lines[0], "Job Title: ") ||
-				!strings.HasPrefix(lines[1], "description: ") {
-				return true, "Event rejected: invalid format. Use 'Job Title:' on the first line and 'description:' on the second line."
-			}
-			return false, ""
-		})
+		policies.RestrictToSpecifiedKinds(false, 1),
+		policies.VerifyMessagePattern())
 	relay.StoreEvent = append(relay.StoreEvent, db.SaveEvent)
 	relay.QueryEvents = append(relay.QueryEvents, db.QueryEvents)
 	relay.CountEvents = append(relay.CountEvents, db.CountEvents)
